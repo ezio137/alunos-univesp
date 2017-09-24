@@ -4,6 +4,7 @@ use \App\Aluno;
 use \App\Curso;
 use \App\Polo;
 use \Symfony\Component\DomCrawler\Crawler;
+use \Illuminate\Http\Request;
 
 /*
 |--------------------------------------------------------------------------
@@ -99,4 +100,18 @@ $router->get('atualizar-alunos', function() {
     });
 
     return Aluno::all();
+});
+
+$router->get('alunos', function(Request $request) {
+    $nome = strtoupper($request->get('nome'));
+    $alunos = Aluno::where('nome', 'like', "%$nome%")
+        ->get()
+        ->map(function($aluno) {
+            return [
+                'nome' => $aluno->nome,
+                'curso' => $aluno->curso->nome,
+                'polo' => $aluno->curso->polo->nome,
+            ];
+        });
+    return $alunos;
 });
