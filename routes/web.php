@@ -1,5 +1,7 @@
 <?php
 
+use App\Polo;
+
 /*
 |--------------------------------------------------------------------------
 | Application Routes
@@ -13,4 +15,12 @@
 
 $router->get('/', function () use ($router) {
     return $router->app->version();
+});
+
+$router->get('polos', function() {
+    return Polo::all();
+});
+
+$router->get('atualizar', function() {
+    return 'ok';
 });
