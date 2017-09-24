@@ -1,6 +1,7 @@
 <?php
 
-use App\Polo;
+use \App\Polo;
+use \Symfony\Component\DomCrawler\Crawler;
 
 /*
 |--------------------------------------------------------------------------
@@ -22,5 +23,20 @@ $router->get('polos', function() {
 });
 
 $router->get('atualizar', function() {
+    Polo::all()->each->delete();
+
+    $client = new GuzzleHttp\Client();
+    $res = $client->get('http://www.vestibularunivesp.com.br/classificacao/univesp.asp');
+
+    $body = $res->getBody(true);
+    $crawler = new Crawler((string) $body);
+    $crawler = $crawler->filter('#CodUnivesp option');
+
+    foreach ($crawler as $i => $item) {
+        $opcao = new Crawler($item);
+        $nome = $opcao->text();
+        $codigo_univesp = $opcao->attr('value');
+        Polo::create(compact('nome', 'codigo_univesp'));
+    }
     return 'ok';
 });

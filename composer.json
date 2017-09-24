@@ -8,7 +8,10 @@
         "php": ">=5.6.4",
         "laravel/lumen-framework": "5.5.*",
         "vlucas/phpdotenv": "~2.2",
-        "jenssegers/mongodb": "master"
+        "jenssegers/mongodb": "master",
+        "guzzlehttp/guzzle": "^6.3",
+        "symfony/dom-crawler": "^3.3",
+        "symfony/css-selector": "^3.3"
     },
     "require-dev": {
         "fzaninotto/faker": "~1.4",
