@@ -14,6 +14,6 @@ class Curso extends Model
 
     public function polo()
     {
-        return $this->belongsTo('Polo');
+        return $this->belongsTo(Polo::class);
     }
 }

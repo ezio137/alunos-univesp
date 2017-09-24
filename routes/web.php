@@ -1,5 +1,6 @@
 <?php
 
+use \App\Aluno;
 use \App\Curso;
 use \App\Polo;
 use \Symfony\Component\DomCrawler\Crawler;
@@ -47,8 +48,6 @@ $router->get('atualizar-cursos', function() {
     Curso::all()->each->delete();
     $client = new GuzzleHttp\Client();
 
-    $polo = Polo::where('codigo_polo', '83')->first();
-
     Polo::all()->each(function($polo) use ($client) {
         $res = $client->post('http://www.vestibularunivesp.com.br/classificacao/lista.asp', [
             'form_params' => [
@@ -70,4 +69,34 @@ $router->get('atualizar-cursos', function() {
     });
 
     return Curso::all();
+});
+
+$router->get('atualizar-alunos', function() {
+    Aluno::all()->each->delete();
+    $client = new GuzzleHttp\Client();
+
+    Curso::where('nome', 'like', '%Compu%')
+        ->get()
+        ->each(function($curso) use ($client) {
+        $res = $client->get('http://www.vestibularunivesp.com.br/classificacao/lista.asp', [
+            'query' => [
+                'codunivesp' => $curso->polo->codigo_polo,
+                'codescolacurso' => $curso->codigo_curso,
+                'o' => 1,
+            ]
+        ]);
+
+        $body = $res->getBody(true);
+        $crawler = new Crawler((string)$body);
+        $crawler = $crawler->filter('table tr');
+
+        foreach ($crawler as $i => $item) {
+            $linha = new Crawler($item);
+            $curso_id = $curso->_id;
+            $nome = $linha->children()->eq(2)->text();
+            Aluno::create(compact('curso_id', 'nome'));
+        }
+    });
+
+    return Aluno::all();
 });
