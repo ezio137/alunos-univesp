@@ -8,6 +8,6 @@ class Polo extends Model
 {
     protected $fillable = [
         'nome',
-        'codigo_univesp',
+        'codigo_polo',
     ];
 }

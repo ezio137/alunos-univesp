@@ -4,7 +4,7 @@ use Illuminate\Support\Facades\Schema;
 use Illuminate\Database\Schema\Blueprint;
 use Illuminate\Database\Migrations\Migration;
 
-class CreatePolosCollection extends Migration
+class CreateCursosCollection extends Migration
 {
     /**
      * Run the migrations.
@@ -13,10 +13,11 @@ class CreatePolosCollection extends Migration
      */
     public function up()
     {
-        Schema::create('polos', function($collection) {
+        Schema::create('cursos', function($collection) {
             $collection->increments('_id');
+            $collection->integer('polo_id');
             $collection->string('nome');
-            $collection->integer('codigo_polo');
+            $collection->integer('codigo_curso');
         });
     }
 

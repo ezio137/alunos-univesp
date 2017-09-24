@@ -1,5 +1,6 @@
 <?php
 
+use \App\Curso;
 use \App\Polo;
 use \Symfony\Component\DomCrawler\Crawler;
 
@@ -22,7 +23,7 @@ $router->get('polos', function() {
     return Polo::all();
 });
 
-$router->get('atualizar', function() {
+$router->get('atualizar-polos', function() {
     Polo::all()->each->delete();
 
     $client = new GuzzleHttp\Client();
@@ -35,8 +36,38 @@ $router->get('atualizar', function() {
     foreach ($crawler as $i => $item) {
         $opcao = new Crawler($item);
         $nome = $opcao->text();
-        $codigo_univesp = $opcao->attr('value');
-        Polo::create(compact('nome', 'codigo_univesp'));
+        $codigo_polo = $opcao->attr('value');
+        Polo::create(compact('nome', 'codigo_polo'));
     }
-    return 'ok';
+
+    return Polo::all();
+});
+
+$router->get('atualizar-cursos', function() {
+    Curso::all()->each->delete();
+    $client = new GuzzleHttp\Client();
+
+    $polo = Polo::where('codigo_polo', '83')->first();
+
+    Polo::all()->each(function($polo) use ($client) {
+        $res = $client->post('http://www.vestibularunivesp.com.br/classificacao/lista.asp', [
+            'form_params' => [
+                'CodUnivesp' => $polo->codigo_polo
+            ]
+        ]);
+
+        $body = $res->getBody(true);
+        $crawler = new Crawler((string)$body);
+        $crawler = $crawler->filter('#CodEscolaCurso option');
+
+        foreach ($crawler as $i => $item) {
+            $opcao = new Crawler($item);
+            $polo_id = $polo->_id;
+            $nome = $opcao->text();
+            $codigo_curso = $opcao->attr('value');
+            Curso::create(compact('polo_id', 'nome', 'codigo_curso'));
+        }
+    });
+
+    return Curso::all();
 });
