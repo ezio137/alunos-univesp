@@ -21,11 +21,10 @@ $router->get('/', function () use ($router) {
     //return $router->app->version();
     $exemplo = <<<'EOT'
 $('.author').each(function(){<br>
-&nbsp;&nbsp;$this = $(this);<br>
-&nbsp;&nbsp;$.ajax({url:'https://alunos-univesp.fagan.com.br/alunos', data:{nome: $this.text().trim().toUpperCase()}, context: {that: $this}})<br>
+&nbsp;&nbsp;$.ajax({url:'https://alunos-univesp.fagan.com.br/alunos', data:{nome: $(this).text().trim().toUpperCase()}, context: this})<br>
 &nbsp;&nbsp;&nbsp;&nbsp;.done(function(resposta){<br>
 &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;if(resposta && resposta.length > 0){<br>
-&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;that.append(' - '+resposta[0].polo);<br>
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;$(this).append(' - '+resposta[0].polo);<br>
 &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;}<br>
 &nbsp;&nbsp;&nbsp;&nbsp;});<br>
 });
