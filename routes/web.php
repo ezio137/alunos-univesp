@@ -18,7 +18,7 @@ use \Illuminate\Http\Request;
 */
 
 $router->get('/', function () use ($router) {
-    return '';
+    return '$.getScript("https://alunos-univesp.fagan.com.br/busca-alunos.js")';
 });
 
 $router->get('polos', function() {
@@ -114,4 +114,9 @@ $router->get('alunos', function(Request $request) {
             ];
         });
     return $alunos;
+});
+
+$router->get('view-alunos', function() {
+    $polos = Polo::all();
+    return view('alunos', compact('polos'));
 });

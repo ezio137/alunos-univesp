@@ -16,4 +16,10 @@ class Curso extends Model
     {
         return $this->belongsTo(Polo::class);
     }
+
+    public function alunos()
+    {
+        return $this->hasMany(Aluno::class);
+    }
+
 }

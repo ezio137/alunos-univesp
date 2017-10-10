@@ -10,4 +10,10 @@ class Polo extends Model
         'nome',
         'codigo_polo',
     ];
+
+    public function cursos()
+    {
+        return $this->hasMany(Curso::class);
+    }
+
 }
