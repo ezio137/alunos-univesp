@@ -8,7 +8,8 @@ class Aluno extends Model
 {
     protected $fillable = [
         'curso_id',
-        'nome',
+	'nome',
+	'url_avatar',
     ];
 
     public function curso()

@@ -22,4 +22,11 @@ class Curso extends Model
         return $this->hasMany(Aluno::class);
     }
 
+    public function getAlunosComFotoAttribute()
+    {
+	return $this->alunos->filter(function($aluno) {
+	    return $aluno->url_avatar;
+	});
+    }
+
 }

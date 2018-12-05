@@ -18,10 +18,12 @@ use \Illuminate\Http\Request;
 */
 
 $router->get('/', function () use ($router) {
-    return '$.getScript("https://alunos-univesp.fagan.com.br/busca-alunos.js")';
+	//    return '$.getScript("https://alunos-univesp.fagan.com.br/busca-alunos.js")';
+    $polos = Polo::all();
+    return view('polos', compact('polos'));
 });
 
-$router->get('polos', function() {
+$router->get('api/polos', function() {
     return Polo::all();
 });
 
@@ -102,7 +104,7 @@ $router->get('atualizar-alunos', function() {
     return Aluno::all();
 });
 
-$router->get('alunos', function(Request $request) {
+$router->get('api/alunos', function(Request $request) {
     $nome = strtoupper($request->get('nome'));
     $alunos = Aluno::where('nome', 'like', "%$nome%")
         ->get()
@@ -116,7 +118,33 @@ $router->get('alunos', function(Request $request) {
     return $alunos;
 });
 
-$router->get('view-alunos', function() {
-    $polos = Polo::all();
+$router->get('atualizar-avatar', function(Request $request) {
+    $nome = strtoupper($request->get('nome'));
+    $aluno = Aluno::where('nome', 'like', "%$nome%")->first();
+
+    $url_avatar = $request->get('url-avatar');
+    if ($aluno) {
+        $avatarVazio = is_null($aluno->url_avatar);
+	$aluno->url_avatar = $url_avatar;
+	$aluno->save();
+	return $avatarVazio ? 'true' : 'false';
+    }
+    
+    return 'NotFound';
+});
+
+$router->get('alunos', function(Request $request) {
+    $polo_id = $request->get('polo_id');
+
+    if ($polo_id) {
+	$polos = Polo::where('codigo_polo', $polo_id)->get();
+    } else {
+        $polos = Polo::all();
+    }
     return view('alunos', compact('polos'));
+});
+
+$router->get('view-polos', function() {
+    $polos = Polo::all();
+    return view('polos', compact('polos'));
 });
